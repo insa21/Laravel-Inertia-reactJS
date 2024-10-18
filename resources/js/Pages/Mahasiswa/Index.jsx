@@ -1,11 +1,35 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { Link } from "@inertiajs/inertia-react";
+import { usePage } from "@inertiajs/inertia-react";
+import Swal from "sweetalert2";
 
 export default function Index({ mahasiswa }) {
-    // console.log(mahasiswa);
+    const { flash } = usePage().props;
+
+    // Gunakan useEffect untuk menampilkan SweetAlert ketika ada pesan flash
+    useEffect(() => {
+        if (flash && flash.message) {
+            Swal.fire({
+                title: "Sukses!",
+                text: "Data berhasil ditambahkan",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+        }
+    }, [flash]);
+
     return (
         <div>
             <h3>Data Mahasiswa</h3>
             <hr />
+            <Link
+                as="button"
+                type="button"
+                href="/mahasiswa/add"
+                style={{ color: "black", marginBottom: 10 }}
+            >
+                Tambah Data
+            </Link>
 
             <table
                 border={1}

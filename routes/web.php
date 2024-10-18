@@ -20,4 +20,6 @@ Route::get('/', function () {
 });
 
 
+
+Route::get('/mahasiswa/add', [MahasiswaController::class, 'formAdd']);
 Route::resource('/mahasiswa', MahasiswaController::class);

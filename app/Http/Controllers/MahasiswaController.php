@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mahasiswa;
+use Illuminate\Contracts\Support\ValidatedData;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,6 +17,11 @@ class MahasiswaController extends Controller
 
         $mahasiswa = Mahasiswa::all();
         return Inertia::render('Mahasiswa/Index', ['mahasiswa' => $mahasiswa]);
+    }
+
+    public function formAdd()
+    {
+        return Inertia::render('Mahasiswa/FormTambah');
     }
 
 
@@ -32,8 +38,37 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi data
+        $validateData = $request->validate([
+            'tnim' => 'required|unique:mahasiswa,nim|max:7',  // Validasi untuk NIM
+            'tnama' => 'required',                             // Validasi untuk Nama
+            'tjenkel' => 'required',                           // Validasi untuk Jenis Kelamin
+            'talamat' => 'required'                            // Validasi untuk Alamat
+        ], [
+            'tnim.required' => 'NIM harus diisi.', // Pesan kustom untuk NIM
+            'tnim.unique' => 'NIM sudah terdaftar.', // Pesan kustom untuk NIM unik
+            'tnim.max' => 'NIM tidak boleh lebih dari 7 karakter.', // Pesan kustom untuk max
+            'tnama.required' => 'Nama harus diisi.', // Pesan kustom untuk Nama
+            'tjenkel.required' => 'Jenis Kelamin harus diisi.', // Pesan kustom untuk Jenis Kelamin
+            'talamat.required' => 'Alamat harus diisi.' // Pesan kustom untuk Alamat
+        ], [
+            'tnim' => 'NIM',        // Alias untuk pesan validasi NIM
+            'tnama' => 'Nama',      // Alias untuk pesan validasi Nama
+            'tjenkel' => 'Jenis Kelamin', // Alias untuk pesan validasi Jenis Kelamin
+            'talamat' => 'Alamat'   // Alias untuk pesan validasi Alamat
+        ]);
+
+        $mahasiswa = new Mahasiswa();
+        $mahasiswa->nim = $validateData['tnim'];
+        $mahasiswa->nama_lengkap = $validateData['tnama'];
+        $mahasiswa->jenkel = $validateData['tjenkel'];
+        $mahasiswa->alamat = $validateData['talamat'];
+        $mahasiswa->save();
+
+        return redirect()->route('mahasiswa.index')->with('message', 'Data Mahasiswa Baru Berhasil Disimpan');
     }
+
+
 
     /**
      * Display the specified resource.
