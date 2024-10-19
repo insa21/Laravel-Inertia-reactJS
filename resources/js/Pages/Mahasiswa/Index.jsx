@@ -2,16 +2,36 @@ import React, { useEffect } from "react";
 import { Link } from "@inertiajs/inertia-react";
 import { usePage } from "@inertiajs/inertia-react";
 import Swal from "sweetalert2";
+import { Inertia } from "@inertiajs/inertia";
 
 export default function Index({ mahasiswa }) {
     const { flash } = usePage().props;
+
+    const deleteData = (id, nama) => {
+        if (confirm(`Yakin menghapus data mahasiswa dengan nama ${nama}?`)) {
+            Inertia.delete(`/mahasiswa/${id}`, {
+                onSuccess: () => {
+                    Swal.fire({
+                        title: "Sukses!",
+                        text: "Data berhasil dihapus",
+                        icon: "success",
+                        confirmButtonText: "OK",
+                    });
+                },
+            });
+        }
+    };
+
+    const editData = (id) => {
+        Inertia.get(`/mahasiswa/${id}`);
+    };
 
     // Gunakan useEffect untuk menampilkan SweetAlert ketika ada pesan flash
     useEffect(() => {
         if (flash && flash.message) {
             Swal.fire({
                 title: "Sukses!",
-                text: "Data berhasil ditambahkan",
+                text: flash.message,
                 icon: "success",
                 confirmButtonText: "OK",
             });
@@ -43,6 +63,7 @@ export default function Index({ mahasiswa }) {
                         <th>Nama Lengkap</th>
                         <th>Jenis Kelamin</th>
                         <th>Alamat</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +83,23 @@ export default function Index({ mahasiswa }) {
                                         : "Perempuan"}
                                 </td>
                                 <td>{mhs.alamat}</td>
+                                <td>
+                                    <button
+                                        onClick={() =>
+                                            editData(mhs.id, mhs.nama_lengkap)
+                                        }
+                                    >
+                                        Edit
+                                    </button>
+                                    <button
+                                        style={{ marginLeft: 5 }}
+                                        onClick={() =>
+                                            deleteData(mhs.id, mhs.nama_lengkap)
+                                        }
+                                    >
+                                        Hapus
+                                    </button>
+                                </td>
                             </tr>
                         ))
                     )}
