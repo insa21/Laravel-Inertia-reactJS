@@ -3,6 +3,7 @@ import { Link } from "@inertiajs/inertia-react";
 import { usePage } from "@inertiajs/inertia-react";
 import Swal from "sweetalert2";
 import { Inertia } from "@inertiajs/inertia";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function Index({ mahasiswa, filters }) {
     const { flash } = usePage().props;
@@ -47,33 +48,36 @@ export default function Index({ mahasiswa, filters }) {
     const startNumber = (mahasiswa.current_page - 1) * mahasiswa.per_page;
 
     return (
-        <div>
+        <div className="container container-fluid">
             <h3>Data Mahasiswa</h3>
             <hr />
             <Link
                 as="button"
                 type="button"
                 href="/mahasiswa/add"
-                style={{ color: "black", marginBottom: 10 }}
+                className="btn btn-sm btn-primary"
+                style={{ marginBottom: 10 }}
             >
                 Tambah Data
             </Link>
 
             <form action="" onSubmit={doSearchData}>
-                <input
-                    type="text"
-                    name="search"
-                    placeholder="Cari data mahasiswa"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                <button type="submit">Cari</button>
+                <>
+                    <div class="input-group mb-3">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Cari data Mahasiswa"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <button class="btn btn-outline-success" type="submit">
+                            Cari
+                        </button>
+                    </div>
+                </>
             </form>
-            <table
-                border={1}
-                cellPadding={5}
-                style={{ borderCollapse: "collapse" }}
-            >
+            <table className="table table-bordered table-striped table-sm">
                 <thead>
                     <tr>
                         <th>No.</th>
@@ -106,6 +110,7 @@ export default function Index({ mahasiswa, filters }) {
                                         onClick={() =>
                                             editData(mhs.id, mhs.nama_lengkap)
                                         }
+                                        className="btn btn-sm btn-info"
                                     >
                                         Edit
                                     </button>
@@ -114,6 +119,7 @@ export default function Index({ mahasiswa, filters }) {
                                         onClick={() =>
                                             deleteData(mhs.id, mhs.nama_lengkap)
                                         }
+                                        className="btn btn-sm btn-danger"
                                     >
                                         Hapus
                                     </button>
@@ -124,7 +130,34 @@ export default function Index({ mahasiswa, filters }) {
                 </tbody>
             </table>
             <div style={{ marginTop: 10 }}>
-                {mahasiswa.links.map((link, index) => {
+                <ul class="pagination">
+                    {mahasiswa.links.map((link, index) => {
+                        if (link.url === null) {
+                            return null;
+                        }
+
+                        let isActive = link.active;
+                        let className = isActive
+                            ? "page-item active"
+                            : "page-item";
+                        let linkLabel = link.label
+                            .replace(/&laquo;/, "<<")
+                            .replace(/&raquo;/, ">>");
+
+                        return (
+                            <li className={className} key={index}>
+                                <button
+                                    className="page-link"
+                                    onClick={() => Inertia.get(link.url)}
+                                >
+                                    {linkLabel}
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+
+                {/* {mahasiswa.links.map((link, index) => {
                     let isActive = link.active;
                     const linkActive = isActive
                         ? { fontWeight: "bold", TextDecoration: "underline" }
@@ -149,7 +182,7 @@ export default function Index({ mahasiswa, filters }) {
                             {linkLabel}
                         </button>
                     );
-                })}
+                })} */}
             </div>
         </div>
     );

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "@inertiajs/inertia-react";
 import { Inertia } from "@inertiajs/inertia";
 import { usePage } from "@inertiajs/inertia-react";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function FormTambah() {
     const [tnim, setTnim] = useState("");
@@ -23,122 +24,107 @@ export default function FormTambah() {
     };
 
     return (
-        <>
-            <h3>Form Tambah Mahasiswa</h3>
+        <div className="container mt-4">
+            <h3 className="text-center mb-4">Form Tambah Mahasiswa</h3>
             <hr />
 
             <Link
                 as="button"
                 type="button"
                 href="/mahasiswa"
-                style={{ color: "black", marginBottom: 10 }}
+                className="btn btn-secondary mb-3"
             >
                 Kembali
             </Link>
 
-            <form onSubmit={saveData}>
-                <table border={0}>
-                    <tbody>
-                        <tr>
-                            <td>Input NIM:</td>
-                            <td>
-                                <input
-                                    maxLength={7}
-                                    type="text"
-                                    value={tnim}
-                                    onChange={(e) => setTnim(e.target.value)}
-                                    placeholder="Masukkan NIM"
-                                />
-                                {errors.tnim && (
-                                    <div
-                                        style={{
-                                            color: "red",
-                                            fontStyle: "italic",
-                                        }}
-                                    >
-                                        {errors.tnim}
-                                    </div>
-                                )}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Input Nama:</td>
-                            <td>
-                                <input
-                                    type="text"
-                                    value={tnama}
-                                    onChange={(e) => setTnama(e.target.value)}
-                                    placeholder="Masukkan Nama"
-                                />
-                                {errors.tnama && (
-                                    <div
-                                        style={{
-                                            color: "red",
-                                            fontStyle: "italic",
-                                        }}
-                                    >
-                                        {errors.tnama}
-                                    </div>
-                                )}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Jenis Kelamin:</td>
-                            <td>
-                                <select
-                                    value={tjenkel}
-                                    onChange={(e) => setTjenkel(e.target.value)}
-                                >
-                                    <option value="">
-                                        Pilih Jenis Kelamin
-                                    </option>
-                                    <option value="L">Laki-laki</option>
-                                    <option value="P">Perempuan</option>
-                                </select>
-                                {errors.tjenkel && (
-                                    <div
-                                        style={{
-                                            color: "red",
-                                            fontStyle: "italic",
-                                        }}
-                                    >
-                                        {errors.tjenkel}
-                                    </div>
-                                )}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Input Alamat:</td>
-                            <td>
-                                <textarea
-                                    value={talamat}
-                                    onChange={(e) => setTalamat(e.target.value)}
-                                    placeholder="Masukkan Alamat"
-                                    cols={30}
-                                    rows={5}
-                                />
-                                {errors.talamat && (
-                                    <div
-                                        style={{
-                                            color: "red",
-                                            fontStyle: "italic",
-                                        }}
-                                    >
-                                        {errors.talamat}
-                                    </div>
-                                )}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan={2}>
-                                <button type="submit" disabled={loading}>
-                                    {loading ? "Tunggu" : "Simpan Data"}
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <form onSubmit={saveData} className="card p-4 shadow-sm">
+                <div className="mb-3">
+                    <label htmlFor="tnim" className="form-label">
+                        Input NIM:
+                    </label>
+                    <input
+                        id="tnim"
+                        maxLength={7}
+                        type="text"
+                        className={`form-control ${
+                            errors.tnim ? "is-invalid" : ""
+                        }`}
+                        value={tnim}
+                        onChange={(e) => setTnim(e.target.value)}
+                        placeholder="Masukkan NIM"
+                    />
+                    {errors.tnim && (
+                        <div className="invalid-feedback">{errors.tnim}</div>
+                    )}
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="tnama" className="form-label">
+                        Input Nama:
+                    </label>
+                    <input
+                        id="tnama"
+                        type="text"
+                        className={`form-control ${
+                            errors.tnama ? "is-invalid" : ""
+                        }`}
+                        value={tnama}
+                        onChange={(e) => setTnama(e.target.value)}
+                        placeholder="Masukkan Nama"
+                    />
+                    {errors.tnama && (
+                        <div className="invalid-feedback">{errors.tnama}</div>
+                    )}
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="tjenkel" className="form-label">
+                        Jenis Kelamin:
+                    </label>
+                    <select
+                        id="tjenkel"
+                        className={`form-select ${
+                            errors.tjenkel ? "is-invalid" : ""
+                        }`}
+                        value={tjenkel}
+                        onChange={(e) => setTjenkel(e.target.value)}
+                    >
+                        <option value="">Pilih Jenis Kelamin</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                    {errors.tjenkel && (
+                        <div className="invalid-feedback">{errors.tjenkel}</div>
+                    )}
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="talamat" className="form-label">
+                        Input Alamat:
+                    </label>
+                    <textarea
+                        id="talamat"
+                        className={`form-control ${
+                            errors.talamat ? "is-invalid" : ""
+                        }`}
+                        value={talamat}
+                        onChange={(e) => setTalamat(e.target.value)}
+                        placeholder="Masukkan Alamat"
+                        rows={5}
+                    />
+                    {errors.talamat && (
+                        <div className="invalid-feedback">{errors.talamat}</div>
+                    )}
+                </div>
+
+                <button
+                    type="submit"
+                    className="btn btn-primary"
+                    disabled={loading}
+                >
+                    {loading ? "Tunggu" : "Simpan Data"}
+                </button>
             </form>
-        </>
+        </div>
     );
 }
