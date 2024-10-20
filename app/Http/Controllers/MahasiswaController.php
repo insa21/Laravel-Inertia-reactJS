@@ -12,11 +12,17 @@ class MahasiswaController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
 
-        $mahasiswa = Mahasiswa::all();
-        return Inertia::render('Mahasiswa/Index', ['mahasiswa' => $mahasiswa]);
+        // $mahasiswa = Mahasiswa::all();
+        $query = Mahasiswa::query();
+        if ($request->has('search') && $request->search != '') {
+            $query->where('nim', 'like', '%' . $request->search . '%')
+                ->orWhere('nama_lengkap', 'like', '%' . $request->input('search') . '%');
+        }
+        $mahasiswa = $query->paginate(10);
+        return Inertia::render('Mahasiswa/Index', ['mahasiswa' => $mahasiswa, 'filters' => $request->only(['search'])]);
     }
 
     public function formAdd()
